@@ -1,6 +1,6 @@
 from django.core.management.base import BaseCommand, CommandError
 from optparse import make_option
-import sys, email, datetime, pytz
+import sys, email, datetime, pytz, re
 from mails.models import Message
 
 class Command(BaseCommand):
@@ -34,6 +34,9 @@ class Command(BaseCommand):
 		new_msg = email.message_from_file(msg_file)
 		
 		msg = Message()
+		pattern = re.compile('<(.*)>')
+		msg.from_address = pattern.search(new_msg.get('from')).group(1)
+		msg.to_address = pattern.search(new_msg.get('to')).group(1)
 		
 		msg_date = new_msg.get('date')
 		msg_date = datetime.datetime.strptime(msg_date[:-6], '%a, %d %b %Y %H:%M:%S')
