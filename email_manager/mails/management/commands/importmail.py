@@ -1,7 +1,7 @@
 from django.core.management.base import BaseCommand, CommandError
 from optparse import make_option
 import sys, email, datetime, pytz, re
-from mails.models import Message
+from mails.models import Message, Person
 
 class Command(BaseCommand):
 	option_list = BaseCommand.option_list + (
@@ -35,8 +35,23 @@ class Command(BaseCommand):
 		
 		msg = Message()
 		pattern = re.compile('<(.*)>')
+		person_pattern = re.compile('"(.*)"')
 		msg.from_address = pattern.search(new_msg.get('from')).group(1)
+		try:
+			msg.from_person = Person.objects.get(email_addresses__contains=msg.from_address)
+		except Person.DoesNotExist:
+			new_person_name = person_pattern.search(new_msg.get('from')).group(1).split(' ')
+			new_person = Person(first_name=new_person_name[0], last_name=new_person_name[1], email_addresses=msg.from_address)
+			new_person.save()
+			msg.from_person = new_person
 		msg.to_address = pattern.search(new_msg.get('to')).group(1)
+		try:
+			msg.to_person = Person.objects.get(email_addresses__contains=msg.to_address)
+		except Person.DoesNotExist:
+			new_person_name = person_pattern.search(new_msg.get('to')).group(1).split(' ')
+			new_person = Person(first_name=new_person_name[0], last_name=new_person_name[1], email_addresses=msg.to_address)
+			new_person.save()
+			msg.to_person = new_person
 		
 		msg_date = new_msg.get('date')
 		msg_date = datetime.datetime.strptime(msg_date[:-6], '%a, %d %b %Y %H:%M:%S')

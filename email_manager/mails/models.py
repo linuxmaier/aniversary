@@ -8,7 +8,7 @@ class Person(models.Model):
 	email_addresses = models.CharField(max_length=50)
 
 	def __unicode__(self):
-		return first_name + last_name
+		return self.first_name + " " + self.last_name
 
 class Message(models.Model):
 	from_address = models.EmailField()
