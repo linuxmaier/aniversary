@@ -11,12 +11,6 @@ class Command(BaseCommand):
 			dest='use_file',
 			default=False,
 			help='Use specified filed to create email.'),
-#		make_option('-s',
-#			'--stdin',
-#			action='store_false',
-#			dest='use_file',
-#			default=False,
-#			help='Use stdin to import mail.'),
 	)
 			
 	help = 'Inserts the new emails into the database'
@@ -34,8 +28,8 @@ class Command(BaseCommand):
 		new_msg = email.message_from_file(msg_file)
 		
 		msg = Message()
-		pattern = re.compile('<(.*)>')
-		person_pattern = re.compile('"(.*)"')
+		pattern = re.compile('([a-zA-Z0-9.-]+@[a-zA-Z0-9.-]+[a-zA-Z0-9-])')
+		person_pattern = re.compile('([A-Za-z]+ [A-Za-z]+)')
 		msg.from_address = pattern.search(new_msg.get('from')).group(1)
 		try:
 			msg.from_person = Person.objects.get(email_addresses__contains=msg.from_address)
