@@ -1,0 +1,20 @@
+<VirtualHost *:80>
+    #My site Name
+    ServerName mcmaier-expedition.com
+
+    DocumentRoot /var/anniversary_app/anniversary/email_manager/ 
+    #Demon process for multiple virtual hosts
+    WSGIDaemonProcess mcmaier-expedition.com python-path=/var/anniversary_app/anniversary/email_manager:/usr/lib/python2.7/dist-packages
+ 
+    #Pointing wsgi script to config file
+    WSGIScriptAlias /anniversary/ /var/anniversary_app/anniversary/email_manager/email_manager/wsgi.py
+    WSGIProcessGroup mcmaier-expedition.com
+
+    
+    <Directory /var/anniversary_app/anniversary/email_manager/email_manager>
+	<Files wsgi.py>
+	    Order deny,allow
+	    Allow from all
+	</Files>
+    </Directory> 
+</VirtualHost>
