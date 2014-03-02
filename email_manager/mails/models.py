@@ -18,7 +18,8 @@ class Message(models.Model):
 	sent_date = models.DateTimeField('date sent')
 	subject = models.CharField(max_length=50)
 	message = models.TextField()
-	full_message = models.TextField()
+	html_message = models.TextField(default='insert html here')
+	full_message = models.TextField(default='full message including headers')
 
 	def __unicode__(self):
 		return self.subject

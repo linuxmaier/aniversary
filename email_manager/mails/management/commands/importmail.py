@@ -56,6 +56,7 @@ class Command(BaseCommand):
 		
 		msg.subject = new_msg.get('subject')
 		msg.message = new_msg.get_payload()
+		msg.html_message = re.compile('\\n').sub('<br>', new_msg.get_payload())
 		msg.full_message = new_msg.as_string()
 		msg.save()
 		
