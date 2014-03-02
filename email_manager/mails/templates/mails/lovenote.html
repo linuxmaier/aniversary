@@ -1,0 +1,17 @@
+<div id='old_message'>
+<p class='subject'>{{old_msg.subject}}</p>
+<br>
+{% autoescape off %}
+<p class='message'>{{old_msg.html_message}}</p>
+{% endautoescape %}
+</div>
+<br>
+<p class='time_diff'>And {{delta.days}} days later...</p>
+<br>
+<div id='new_message'>
+<p class='subject'>{{new_msg.subject}}</p>
+<br>
+{% autoescape off %}
+<p class='message'>{{new_msg.html_message}}</p>
+{% endautoescape %}
+</div>
