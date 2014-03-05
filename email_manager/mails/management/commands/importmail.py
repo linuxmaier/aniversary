@@ -55,8 +55,15 @@ class Command(BaseCommand):
 		msg.sent_date = msg_date
 		
 		msg.subject = new_msg.get('subject')
-		msg.message = new_msg.get_payload()
-		msg.html_message = re.compile('\\n').sub('<br>', new_msg.get_payload())
+		if new_msg.is_multipart() is False:
+			msg.message = new_msg.get_payload()
+		else:
+			for payload in new_msg.get_payload():
+				if payload.get_content_subtype() == 'plain':
+					msg.message = payload.get_payload()
+					break
+
+		msg.html_message = re.compile('\\n').sub('<br>', msg.message)
 		msg.full_message = new_msg.as_string()
 		msg.save()
 		
